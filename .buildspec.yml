@@ -5,8 +5,8 @@ env:
      # key: "value"
      # key: "value"
   parameter-store:
-     pushuser: "r.lerch.org/user"
-     pushpass: "r.lerch.org/pass"
+     pushuser: "/r.lerch.org/user"
+     pushpass: "/r.lerch.org/pass"
      deploykey: "/github/ungoogled-chromium/deploy_key"
   #secrets-manager:
      # key: secret-id:json-key:version-stage:version-id
