@@ -1,8 +1,9 @@
 FROM debian:10.3-slim
-
-ARG VERSION=80.0.3987.132-1.buster1
-ARG DOWNLOAD=https://github.com/Eloston/ungoogled-chromium-binaries/releases/download
-COPY shas.txt /
+ARG VERSION=83.0.4103.116-1
+# https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/amd64/ungoogled-chromium-common_83.0.4103.116-1.buster2_amd64.deb
+# https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/all/ungoogled-chromium-l10n_83.0.4103.116-1.buster2_all.deb
+ARG PREFIX=https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/amd64/ungoogled-chromium
+ARG SUFFIX=.buster2_amd64.deb
 COPY sources.list /etc/apt/sources.list
 RUN true && \
     apt-get -o Acquire::Check-Valid-Until=false update && \
@@ -51,22 +52,19 @@ RUN true && \
       fonts-symbola=2.60-1 \
       libcanberra-gtk3-0=0.30-7 \
       i965-va-driver=2.3.0+dfsg1-1 \
+      libgbm1=18.3.6-2+deb10u1 \
+      libre2-5=20190101+dfsg-2 \
       && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium-common_"${VERSION}"_amd64.deb && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium-dbgsym_"${VERSION}"_amd64.deb && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium-driver-dbgsym_"${VERSION}"_amd64.deb && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium-driver_"${VERSION}"_amd64.deb && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium-l10n_"${VERSION}"_all.deb && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium-sandbox-dbgsym_"${VERSION}"_amd64.deb && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium-sandbox_"${VERSION}"_amd64.deb && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium-shell-dbgsym_"${VERSION}"_amd64.deb && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium-shell_"${VERSION}"_amd64.deb && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium_"${VERSION}"_amd64.buildinfo && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium_"${VERSION}"_amd64.changes && \
-    wget "${DOWNLOAD}"/"${VERSION}"/ungoogled-chromium_"${VERSION}"_amd64.deb && \
-    sha256sum -c shas.txt && \
-    rm shas.txt && \
-    dpkg -i ungoogled-chromium_*.deb ungoogled-chromium-common_*.deb && \
+    wget --progress=dot "${PREFIX}_${VERSION}${SUFFIX}" && \
+    wget --progress=dot "${PREFIX}-common_${VERSION}${SUFFIX}" && \
+    wget --progress=dot "${PREFIX}-dbgsym_${VERSION}${SUFFIX}" && \
+    wget --progress=dot "${PREFIX}-driver-dbgsym_${VERSION}${SUFFIX}" && \
+    wget --progress=dot "${PREFIX}-driver_${VERSION}${SUFFIX}" && \
+    wget --progress=dot "https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/all/ungoogled-chromium-l10n_${VERSION}.buster2_all.deb" && \
+    wget --progress=dot "${PREFIX}-sandbox_${VERSION}${SUFFIX}" && \
+    wget --progress=dot "${PREFIX}-shell-dbgsym_${VERSION}${SUFFIX}" && \
+    wget --progress=dot "${PREFIX}-shell_${VERSION}${SUFFIX}" && \
+    dpkg -i ungoogled-chromium*.deb && \
     apt-get -y remove wget && \
     apt-get -y autoremove && \
     rm ungoogled-chromium* && \
