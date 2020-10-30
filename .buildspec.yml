@@ -36,7 +36,8 @@ phases:
       - echo $pushpass | docker login -u $pushuser --password-stdin r-push.lerch.org
       - echo done
       - echo Getting latest version
-      - export VERSION=$(curl -s "https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/amd64/" | grep -oP 'ungoogled-chromium_([0-9.-]).*?\.buster1_amd64\.deb' |grep -oe '[0-9.]*' |head -1)
+      - export VERSION=$(curl -s "https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/amd64/" | grep -oP 'ungoogled-chromium_([0-9.-]).*?\.buster1_amd64\.deb' |grep -oe '[-0-9.]*' |head -2 |tail -1)
+      - export VERSION=${VERSION%?}
   build:
     commands:
       - docker build --build-arg VERSION=$VERSION -t r-push.lerch.org:$VERSION .
