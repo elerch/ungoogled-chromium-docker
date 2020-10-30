@@ -1,0 +1,70 @@
+version: 0.2
+
+env:
+  #variables:
+     # key: "value"
+     # key: "value"
+  parameter-store:
+     pushuser: "r.lerch.org/user"
+     pushpass: "r.lerch.org/pass"
+     deploykey: "/github/ungoogled-chromium/deploy_key"
+  #secrets-manager:
+     # key: secret-id:json-key:version-stage:version-id
+     # key: secret-id:json-key:version-stage:version-id
+  #exported-variables:
+     # - variable
+     # - variable
+  #git-credential-helper: yes
+#batch:
+  #fast-fail: true
+  #build-list:
+  #build-matrix:
+  #build-graph:
+phases:
+  #install:
+    #If you use the Ubuntu standard image 2.0 or later, you must specify runtime-versions.
+    #If you specify runtime-versions and use an image other than Ubuntu standard image 2.0, the build fails.
+    #runtime-versions:
+      # name: version
+      # name: version
+    #commands:
+      # - command
+      # - command
+  pre_build:
+    commands:
+      - echo Logging into r-push.lerch.org...
+      - docker login -u $pushuser -p $pushpass r-push.lerch.org
+      - echo done
+      - echo Getting latest version
+      - export VERSION=$(curl -s "https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/amd64/" | grep -oP 'ungoogled-chromium_([0-9.-]).*?\.buster1_amd64\.deb' ungoogled-chromium.html |grep -oe '[0-9.]*' |head -1)
+  build:
+    commands:
+      - docker build --build-arg VERSION=$VERSION -t r-push.lerch.org:$VERSION .
+      # - command
+  post_build:
+    commands:
+      - echo Build Completed on `date`
+      - echo Pushing the Docker image...
+      - docker push r-push.lerch.org:$VERSION
+      - echo Done
+      # - echo Updating version repo
+      # - echo "$deploykey" > 
+      # - command
+#reports:
+  #report-name-or-arn:
+    #files:
+      # - location
+      # - location
+    #base-directory: location
+    #discard-paths: yes
+    #file-format: JunitXml | CucumberJson
+#artifacts:
+  #files:
+    # - location
+    # - location
+  #name: $(date +%Y-%m-%d)
+  #discard-paths: yes
+  #base-directory: location
+#cache:
+  #paths:
+    # - paths
