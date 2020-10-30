@@ -3,7 +3,7 @@ ARG VERSION=83.0.4103.116-1
 # https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/amd64/ungoogled-chromium-common_83.0.4103.116-1.buster2_amd64.deb
 # https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/all/ungoogled-chromium-l10n_83.0.4103.116-1.buster2_all.deb
 ARG PREFIX=https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/amd64/ungoogled-chromium
-ARG SUFFIX=.buster2_amd64.deb
+ARG SUFFIX=.buster1_amd64.deb
 COPY sources.list /etc/apt/sources.list
 RUN true && \
     apt-get -o Acquire::Check-Valid-Until=false update && \
@@ -60,7 +60,7 @@ RUN true && \
     wget --progress=dot "${PREFIX}-dbgsym_${VERSION}${SUFFIX}" && \
     wget --progress=dot "${PREFIX}-driver-dbgsym_${VERSION}${SUFFIX}" && \
     wget --progress=dot "${PREFIX}-driver_${VERSION}${SUFFIX}" && \
-    wget --progress=dot "https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/all/ungoogled-chromium-l10n_${VERSION}.buster2_all.deb" && \
+    wget --progress=dot "https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/all/ungoogled-chromium-l10n_${VERSION}.buster1_all.deb" && \
     wget --progress=dot "${PREFIX}-sandbox_${VERSION}${SUFFIX}" && \
     wget --progress=dot "${PREFIX}-shell-dbgsym_${VERSION}${SUFFIX}" && \
     wget --progress=dot "${PREFIX}-shell_${VERSION}${SUFFIX}" && \
