@@ -40,13 +40,13 @@ phases:
       - export VERSION=${VERSION%?}
   build:
     commands:
-      - docker build --build-arg VERSION=$VERSION -t r-push.lerch.org:$VERSION .
+      - docker build --build-arg VERSION=$VERSION -t r-push.lerch.org/ungoogled-chromium:$VERSION .
       # - command
   post_build:
     commands:
       - echo Build Completed on `date`
       - echo Pushing the Docker image...
-      - docker push r-push.lerch.org:$VERSION
+      - docker push r-push.lerch.org/ungoogled-chromium:$VERSION
       - echo Done
       # - echo Updating version repo
       # - echo "$deploykey" > 
