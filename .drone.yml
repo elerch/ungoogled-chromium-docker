@@ -1,0 +1,52 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: make
+  image: alpine
+  environment:
+    USERNAME:
+      from_secret: docker_username
+    PASSWORD:
+      from_secret: docker_password
+    REGISTRY:
+      from_secret: docker_registry
+  volumes:
+  - name: dockersock
+    path: /var/run
+  commands:
+  - apk add make git
+  - 'while [ "$(docker info >/dev/null 2>&1; echo $?)" -ne 0 ]; do sleep 1; done'
+  - echo login $REGISTRY
+  - docker login -u $USERNAME -p $PASSWORD $REGISTRY
+  - export VERSION="${VERSION:-$(curl -s "https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/amd64/" | |grep -oP 'ungoogled-chromium_.*?\.deb'|head -1 |cut -d_ -f2- |sed 's/\.[^\.]*\.deb//')}"
+  - docker build --build-arg VERSION=$VERSION -t r-push.lerch.org/ungoogled-chromium:$VERSION .
+  - docker push r-push.lerch.org/ungoogled-chromium:$VERSION
+- name: notify
+  image: plugins/matrix
+  when:
+    status:
+    - success
+    - failure
+  settings:
+    homeserver:
+      from_secret: matrix-homeserver
+    roomid:
+      from_secret: matrix-room-id
+    userid:
+      from_secret: matrix-user-id
+    accesstoken:
+      from_secret: matrix-access-token
+
+services:
+- name: docker
+  image: docker:dind
+  privileged: true
+  volumes:
+  - name: dockersock
+    path: /var/run
+
+volumes:
+- name: dockersock
+  temp: {}
