@@ -1,0 +1,14 @@
+#!/bin/sh
+
+from="$(grep "FROM " Dockerfile |head -1 |sed 's/FROM //')"
+containerid="$(podman create "$from" sleep 1h)"
+podman start "$containerid" >/dev/null
+podman exec "$containerid" apt-get update >/dev/null
+podman cp "$containerid":/etc/apt/sources.list . >/dev/null
+sed -i '/^[^#]/d' sources.list
+sed -i 's/# *//g' sources.list
+packages="$(grep -oe '^  *[^= ]*=' Dockerfile |cut -d= -f1|awk '{print $1}')"
+for package in $packages; do
+  echo "${package}=$(podman exec "$containerid" apt-cache showpkg "$package"|grep -A1 Versions: |tail -1|cut -d\  -f1) \\"
+done
+podman rm -f "$containerid"
