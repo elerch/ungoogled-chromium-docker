@@ -16,7 +16,7 @@ steps:
   - name: dockersock
     path: /var/run
   commands:
-  - apk add make git
+  - apk add make git grep
   - 'while [ "$(docker info >/dev/null 2>&1; echo $?)" -ne 0 ]; do sleep 1; done'
   - echo login $REGISTRY
   - docker login -u $USERNAME -p $PASSWORD $REGISTRY
