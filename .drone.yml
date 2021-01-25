@@ -20,7 +20,7 @@ steps:
   - 'while [ "$(docker info >/dev/null 2>&1; echo $?)" -ne 0 ]; do sleep 1; done'
   - echo login $REGISTRY
   - docker login -u $USERNAME -p $PASSWORD $REGISTRY
-  - export VERSION="${VERSION:-$(curl -s "https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/amd64/" | |grep -oP 'ungoogled-chromium_.*?\.deb'|head -1 |cut -d_ -f2- |sed 's/\.[^\.]*\.deb//')}"
+  - export VERSION="${VERSION:-$(curl -s "https://download.opensuse.org/repositories/home:/ungoogled_chromium/Debian_Buster/amd64/" |grep -oP 'ungoogled-chromium_.*?\.deb'|head -1 |cut -d_ -f2- |sed 's/\.[^\.]*\.deb//')}"
   - docker build --build-arg VERSION=$VERSION -t r-push.lerch.org/ungoogled-chromium:$VERSION .
   - docker push r-push.lerch.org/ungoogled-chromium:$VERSION
 - name: notify
