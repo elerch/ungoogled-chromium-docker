@@ -54,6 +54,7 @@ RUN true && \
       i965-va-driver=2.3.0+dfsg1-1 \
       libgbm1=18.3.6-2+deb10u1 \
       libre2-5=20190101+dfsg-2 \
+      libatomic1=8.3.0-6 \
       && \
     wget --progress=dot "${PREFIX}_${VERSION}${SUFFIX}" && \
     wget --progress=dot "${PREFIX}-common_${VERSION}${SUFFIX}" && \
